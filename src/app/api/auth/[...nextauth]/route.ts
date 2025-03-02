@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import type { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
+import { dateNow } from "@/utils/date";
 
 /**
  * Função para atualizar o token usando o refreshToken
@@ -36,7 +37,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     }
 
     // Calcula quando o token expirará
-    const nowInSeconds = Math.floor(Date.now() / 1000);
+    const nowInSeconds = dateNow();
     const expiresAt = nowInSeconds + Number(refreshedTokens.expires_in);
 
     console.log("retornou token novo");
@@ -74,23 +75,14 @@ export const authOptions: NextAuthOptions = {
           ...token,
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
-          accessTokenExpires: account.expires_at
-            ? account.expires_at * 1000
-            : 0,
+          accessTokenExpires: account.expires_at ? account.expires_at : 0,
           user,
         };
       }
 
       // Verifica se o token está próximo de expirar
       const shouldRefreshTime =
-        Math.floor(Math.floor(Date.now() / 1000)) >=
-        ((token.accessTokenExpires as number) || 0);
-
-      console.log("Date now", Math.floor(Math.floor(Date.now() / 1000)));
-      console.log(
-        "token.accessTokenExpires",
-        token.accessTokenExpires as number
-      );
+        dateNow() >= ((token.accessTokenExpires as number) || 0);
 
       // Se não tiver expirado, retorna o token sem alterações
       if (!shouldRefreshTime) {
