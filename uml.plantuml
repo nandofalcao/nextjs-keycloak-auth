@@ -1,0 +1,106 @@
+@startuml UML
+actor "Fernando" as U
+participant "Frontend" as FE
+participant "Backend" as BE
+participant "Banco de Dados" as DB
+
+U -> FE : Insere credenciais
+FE -> BE : Envia requisição de login
+BE -> DB : Verifica usuário e senha
+DB --> BE : Retorna sucesso/falha
+
+alt Login bem-sucedido
+    BE -> FE : Retorna token de autenticação
+    FE -> Usuário : Acesso concedido
+else Falha no login
+    BE -> FE : Retorna erro
+    FE -> Usuário : Exibe mensagem de erro
+end
+@enduml
+
+@startuml  Diagrama de Caso de Uso
+left to right direction
+actor Cliente
+actor Administrador
+
+rectangle Sistema {
+    Cliente --> (Comprar Produto)
+    Cliente --> (Visualizar Pedido)
+    Cliente --> (Visualizar Pedidos)
+    Administrador --> (Gerenciar Estoque)
+    Administrador --> (Gerenciar Usuários)
+    Administrador --> (Visualizar Pedidos)
+}
+
+@enduml
+
+@startuml Diagrama de Sequência
+actor Cliente
+participant "Loja Online" as Loja
+participant "Gateway de Pagamento" as Pagamento
+participant "Banco" as Banco
+
+Cliente -> Loja : Seleciona produto
+Cliente -> Loja : Confirma compra
+Loja -> Pagamento : Processar pagamento
+Pagamento -> Banco : Autorizar transação
+Banco --> Pagamento : Confirmação
+Pagamento --> Loja : Pagamento aprovado
+Loja -> Cliente : Confirmação de compra
+@enduml
+
+@startuml Diagrama de Classes
+left to right direction
+class Cliente {
+    +nome: String
+    +email: String
+    +fazerPedido()
+}
+
+class Pedido {
+    +id: int
+    +data: Date
+    +status: String
+}
+
+class Produto {
+    +nome: String
+    +preco: float
+}
+
+Cliente "1" --> "*" Pedido : faz
+Pedido "*" --> "*" Produto : contém
+@enduml
+
+@startuml Diagrama de Componentes
+left to right direction
+component "Frontend" as FE
+component "Backend" as BE
+component "Banco de Dados" as DB
+
+FE --> BE : API REST
+BE --> DB : Conexão SQL
+@enduml
+
+@startuml Diagrama de Implantação
+left to right direction
+node "Usuário" {
+    [Navegador]
+}
+
+node "Servidor Web" {
+    [Frontend]
+}
+
+node "Servidor de Aplicação" {
+    [Backend]
+}
+
+node "Banco de Dados" {
+    [PostgreSQL]
+}
+
+[Navegador] --> [Frontend]
+[Frontend] --> [Backend]
+[Backend] --> [PostgreSQL]
+@enduml
