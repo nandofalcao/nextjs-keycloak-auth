@@ -7,8 +7,11 @@ export function AuthStatus() {
   const { data: session, status, update } = useSession();
 
   const handleRefreshToken = async () => {
+    const offsetSeconds = Number(
+      process.env.NEXT_REFRESH_TOKEN_OFFSET_SECONDS || "60"
+    );
     const shouldRefreshTime =
-      dateNow() >= ((session?.tokenExpires as number) || 0);
+      dateNow() >= ((session?.tokenExpires as number) || 0) - offsetSeconds;
 
     console.log("session", session);
     console.log("dateNow", dateNow());

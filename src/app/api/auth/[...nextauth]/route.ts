@@ -81,8 +81,12 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Verifica se o token está próximo de expirar
+      const offsetSeconds = Number(
+        process.env.NEXT_REFRESH_TOKEN_OFFSET_SECONDS || "60"
+      );
       const shouldRefreshTime =
-        dateNow() >= ((token.accessTokenExpires as number) || 0);
+        dateNow() >=
+        ((token.accessTokenExpires as number) || 0) - offsetSeconds;
 
       // Se não tiver expirado, retorna o token sem alterações
       if (!shouldRefreshTime) {
