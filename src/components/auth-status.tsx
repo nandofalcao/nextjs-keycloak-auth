@@ -16,9 +16,10 @@ export function AuthStatus() {
     console.log("shouldRefreshTime", shouldRefreshTime);
 
     if (shouldRefreshTime) {
+      // Atualiza a sessão
       await update();
     }
-    // Primeiro, desloga do NextAuth sem redirecionamento automático
+
     await fetch("/api/refresh");
   };
 
