@@ -27,7 +27,8 @@ export function AuthStatus() {
   };
 
   const handleSignOut = async () => {
-    await signOut({ redirect: false });
+    await fetch("/api/logout");
+    await signOut();
   };
 
   if (status === "loading") {
