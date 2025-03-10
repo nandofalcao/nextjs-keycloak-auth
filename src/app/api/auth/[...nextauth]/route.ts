@@ -65,6 +65,11 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.KEYCLOAK_CLIENT_ID || "",
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "",
       issuer: process.env.KEYCLOAK_ISSUER || "",
+      authorization: {
+        params: {
+          ui_locales: "pt-BR",
+        },
+      },
     }),
   ],
   callbacks: {
@@ -118,11 +123,11 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  pages: {
-    signIn: "/auth/signin", // Página personalizada de login
-    signOut: "/auth/signout", // Página personalizada de logout
-    error: "/auth/error", // Página de erro
-  },
+  // pages: {
+  //   signIn: "/auth/signin", // Página personalizada de login
+  //   signOut: "/auth/signout", // Página personalizada de logout
+  //   error: "/auth/error", // Página de erro
+  // },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
 };
